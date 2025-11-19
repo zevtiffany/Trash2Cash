@@ -82,7 +82,7 @@ export default function LoginPage() {
             <div className="mt-6 text-center text-xs md:text-sm text-gray-500">
               <p className="font-medium mb-2 text-xs md:text-sm">Akun Demo:</p>
               <div className="space-y-1 text-xs">
-                <p>Rumah Tangga: <span className="font-mono bg-gray-100 px-1 rounded">budi@warga.com</span> / <span className="font-mono bg-gray-100 px-1 rounded">123</span></p>
+                <p>Rumah Tangga: <span className="font-mono bg-gray-100 px-1 rounded">agustafo@warga.com</span> / <span className="font-mono bg-gray-100 px-1 rounded">123</span></p>
                 <p>Bank Sampah: <span className="font-mono bg-gray-100 px-1 rounded">admin@maju.com</span> / <span className="font-mono bg-gray-100 px-1 rounded">123</span></p>
                 <p>Pemerintah: <span className="font-mono bg-gray-100 px-1 rounded">admin@dlh.go.id</span> / <span className="font-mono bg-gray-100 px-1 rounded">123</span></p>
               </div>
