@@ -1,0 +1,224 @@
+"use client";
+
+import { useAppStore } from "@/lib/store";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Coins, Scale, Users, ArrowUpRight, Building2 } from "lucide-react";
+
+// Inline Card components for simplicity since I can't run shadcn init
+const SimpleCard = ({ title, value, icon: Icon, description }: any) => (
+  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+    <div className="flex items-center justify-between mb-4">
+      <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+      <div className="p-2 bg-emerald-50 rounded-full">
+        <Icon className="w-4 h-4 text-emerald-600" />
+      </div>
+    </div>
+    <div className="text-2xl font-bold text-gray-900">{value}</div>
+    <p className="text-xs text-gray-500 mt-1">{description}</p>
+  </div>
+);
+
+export default function DashboardPage() {
+  const { currentUser, transactions, users } = useAppStore();
+
+  if (!currentUser) return null;
+
+  // Household View
+  if (currentUser.role === "household") {
+    const myTransactions = transactions.filter(t => t.userId === currentUser.id);
+    const totalWaste = myTransactions.reduce((acc, curr) => acc + curr.weight, 0);
+
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Halo, {currentUser.name}! 👋</h1>
+          <p className="text-gray-500">Selamat datang kembali di Trash to Cash.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <SimpleCard 
+            title="Total Poin" 
+            value={currentUser.points} 
+            icon={Coins} 
+            description="Poin tersedia untuk ditukar" 
+          />
+          <SimpleCard 
+            title="Total Sampah" 
+            value={`${totalWaste} Kg`} 
+            icon={Scale} 
+            description="Sampah yang sudah disetor" 
+          />
+          <SimpleCard 
+            title="Transaksi" 
+            value={myTransactions.length} 
+            icon={ArrowUpRight} 
+            description="Kali penyetoran" 
+          />
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-6 border-b border-gray-100">
+            <h3 className="font-semibold text-gray-900">Riwayat Penyetoran Terakhir</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-gray-50 text-gray-600 font-medium">
+                <tr>
+                  <th className="px-6 py-3">Tanggal</th>
+                  <th className="px-6 py-3">Jenis Sampah</th>
+                  <th className="px-6 py-3">Berat (Kg)</th>
+                  <th className="px-6 py-3">Poin Didapat</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {myTransactions.length > 0 ? (
+                  myTransactions.slice(0, 5).map((t) => (
+                    <tr key={t.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-3">{t.date}</td>
+                      <td className="px-6 py-3">{t.type}</td>
+                      <td className="px-6 py-3">{t.weight}</td>
+                      <td className="px-6 py-3 text-emerald-600 font-medium">+{t.pointsEarned}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                      Belum ada transaksi.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Waste Bank View
+  if (currentUser.role === "waste_bank") {
+    const totalTransactions = transactions.length;
+    const totalWasteCollected = transactions.reduce((acc, curr) => acc + curr.weight, 0);
+
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard Bank Sampah</h1>
+          <p className="text-gray-500">Kelola setoran sampah warga.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <SimpleCard 
+            title="Total Transaksi" 
+            value={totalTransactions} 
+            icon={ArrowUpRight} 
+            description="Semua transaksi masuk" 
+          />
+          <SimpleCard 
+            title="Total Sampah Terkumpul" 
+            value={`${totalWasteCollected} Kg`} 
+            icon={Scale} 
+            description="Akumulasi semua jenis" 
+          />
+          <SimpleCard 
+            title="Nasabah Aktif" 
+            value={users.filter(u => u.role === 'household').length} 
+            icon={Users} 
+            description="Jumlah warga terdaftar" 
+          />
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-6 border-b border-gray-100">
+            <h3 className="font-semibold text-gray-900">Transaksi Terbaru</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-gray-50 text-gray-600 font-medium">
+                <tr>
+                  <th className="px-6 py-3">ID Transaksi</th>
+                  <th className="px-6 py-3">Nasabah</th>
+                  <th className="px-6 py-3">Jenis</th>
+                  <th className="px-6 py-3">Berat</th>
+                  <th className="px-6 py-3">Tanggal</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {transactions.slice(0, 10).map((t) => {
+                  const user = users.find(u => u.id === t.userId);
+                  return (
+                    <tr key={t.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-3 font-mono text-xs">{t.id}</td>
+                      <td className="px-6 py-3">{user?.name || 'Unknown'}</td>
+                      <td className="px-6 py-3">{t.type}</td>
+                      <td className="px-6 py-3">{t.weight} Kg</td>
+                      <td className="px-6 py-3">{t.date}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Government View
+  if (currentUser.role === "government") {
+    // Prepare data for chart
+    const data = transactions.reduce((acc: any[], curr) => {
+      const existing = acc.find(item => item.name === curr.type);
+      if (existing) {
+        existing.weight += curr.weight;
+      } else {
+        acc.push({ name: curr.type, weight: curr.weight });
+      }
+      return acc;
+    }, []);
+
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard Pemerintah</h1>
+          <p className="text-gray-500">Monitoring statistik pengelolaan sampah wilayah.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 className="font-semibold text-gray-900 mb-6">Komposisi Sampah Terkumpul</h3>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={data}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="weight" fill="#059669" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+             <SimpleCard 
+              title="Total Partisipasi Warga" 
+              value={users.filter(u => u.role === 'household').length} 
+              icon={Users} 
+              description="Rumah tangga aktif" 
+            />
+             <SimpleCard 
+              title="Total Bank Sampah" 
+              value={users.filter(u => u.role === 'waste_bank').length} 
+              icon={Building2} 
+              description="Unit bank sampah beroperasi" 
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return <div>Role not recognized</div>;
+}
+
