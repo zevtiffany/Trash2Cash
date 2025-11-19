@@ -35,10 +35,10 @@ export default function WasteInputForm() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 max-w-2xl mx-auto">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6 max-w-2xl mx-auto">
       <div className="mb-6">
-        <h2 className="text-xl font-bold text-gray-900">Input Setoran Sampah</h2>
-        <p className="text-gray-500">Catat setoran sampah dari nasabah.</p>
+        <h2 className="text-lg md:text-xl font-bold text-gray-900">Input Setoran Sampah</h2>
+        <p className="text-sm md:text-base text-gray-500">Catat setoran sampah dari nasabah.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppStore } from "@/lib/store";
+import { useState } from "react";
 import { 
   LayoutDashboard, 
   Trash2, 
@@ -10,7 +11,9 @@ import {
   BookOpen, 
   LogOut, 
   Recycle,
-  BarChart3
+  BarChart3,
+  Menu,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +21,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { currentUser, logout } = useAppStore();
+  const [isOpen, setIsOpen] = useState(false);
 
   if (!currentUser) return null;
 
@@ -66,15 +70,46 @@ export default function Sidebar() {
   const navItems = getNavItems();
 
   return (
-    <div className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col fixed left-0 top-0">
-      <div className="p-6 flex items-center gap-3 border-b border-gray-100">
-        <div className="bg-emerald-600 p-2 rounded-lg">
-          <Recycle className="w-6 h-6 text-white" />
+    <>
+      {/* Mobile Header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 z-50">
+        <div className="flex items-center gap-2">
+          <div className="bg-emerald-600 p-2 rounded-lg">
+            <Recycle className="w-5 h-5 text-white" />
+          </div>
+          <span className="font-bold text-lg text-emerald-900">Trash2Cash</span>
         </div>
-        <span className="font-bold text-xl text-emerald-900">Trash2Cash</span>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="p-2 hover:bg-gray-100 rounded-lg"
+        >
+          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </div>
 
-      <div className="p-4">
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-30 top-16"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={cn(
+        "fixed top-0 left-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col z-40 transition-transform duration-300",
+        "hidden md:flex",
+        isOpen && "md:hidden flex top-16 h-[calc(100vh-64px)]"
+      )}>
+        {/* Desktop Header */}
+        <div className="hidden md:flex items-center gap-3 border-b border-gray-100 p-6">
+          <div className="bg-emerald-600 p-2 rounded-lg">
+            <Recycle className="w-6 h-6 text-white" />
+          </div>
+          <span className="font-bold text-xl text-emerald-900">Trash2Cash</span>
+        </div>
+
+      <div className="p-4 flex-1 overflow-y-auto">
         <div className="mb-6 px-4 py-3 bg-emerald-50 rounded-lg">
           <p className="text-xs text-emerald-600 font-semibold uppercase tracking-wider mb-1">
             Login Sebagai
@@ -92,6 +127,7 @@ export default function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setIsOpen(false)}
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
                   isActive
@@ -107,7 +143,7 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <div className="mt-auto p-4 border-t border-gray-100">
+      <div className="p-4 border-t border-gray-100">
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 px-4 py-3 w-full rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
@@ -116,6 +152,7 @@ export default function Sidebar() {
           Keluar
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

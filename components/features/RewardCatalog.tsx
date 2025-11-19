@@ -10,18 +10,18 @@ export default function RewardCatalog() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Katalog Penukaran Poin</h2>
-          <p className="text-gray-500">Tukarkan poinmu dengan hadiah menarik.</p>
+          <h2 className="text-lg md:text-xl font-bold text-gray-900">Katalog Penukaran Poin</h2>
+          <p className="text-sm md:text-base text-gray-500">Tukarkan poinmu dengan hadiah menarik.</p>
         </div>
-        <div className="bg-emerald-100 px-4 py-2 rounded-full flex items-center gap-2">
+        <div className="bg-emerald-100 px-4 py-2 rounded-full flex items-center gap-2 w-fit">
           <Coins className="w-5 h-5 text-emerald-600" />
           <span className="font-bold text-emerald-800">{currentUser.points} Poin</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {rewards.map((reward) => {
           const canAfford = currentUser.points >= reward.pointsCost;
           
