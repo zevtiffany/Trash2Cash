@@ -10,17 +10,18 @@ export default function RewardCatalog() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Katalog Penukaran Poin</h2>
-          <p className="text-gray-500">Tukarkan poinmu dengan hadiah menarik.</p>
+          <h2 className="text-lg md:text-xl font-bold text-gray-900">Katalog Penukaran Poin</h2>
+          <p className="text-sm md:text-base text-gray-500">Tukarkan poinmu dengan hadiah menarik.</p>
         </div>
-        <div className="bg-emerald-100 px-4 py-2 rounded-full flex items-center gap-2">
+        <div className="bg-emerald-100 px-4 py-2 rounded-full flex items-center gap-2 w-fit">
           <Coins className="w-5 h-5 text-emerald-600" />
           <span className="font-bold text-emerald-800">{currentUser.points} Poin</span>
         </div>
       </div>
 
+<<<<<<< HEAD
       {rewards.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
           <Gift className="w-12 h-12 text-gray-300 mx-auto mb-3" />
@@ -61,6 +62,23 @@ export default function RewardCatalog() {
                     <Gift className="w-4 h-4" />
                     {canAfford ? "Tukar Sekarang" : "Poin Kurang"}
                   </button>
+=======
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        {rewards.map((reward) => {
+          const canAfford = currentUser.points >= reward.pointsCost;
+          
+          return (
+            <div key={reward.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+              <div className="h-32 bg-emerald-50 flex items-center justify-center text-4xl">
+                {reward.image}
+              </div>
+              <div className="p-6 flex-1 flex flex-col">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-bold text-gray-900">{reward.name}</h3>
+                  <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-1 rounded-full">
+                    {reward.pointsCost} Poin
+                  </span>
+>>>>>>> 4413bebe34a81526eb0c85a01edc4ad6dfd221ad
                 </div>
               </div>
             );

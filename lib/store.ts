@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+<<<<<<< HEAD
 import { createClient } from '@/lib/supabase/client';
 
 export type Role = "household" | "waste_bank" | "government";
@@ -21,6 +22,36 @@ export interface WasteTransaction {
   created_at: string;
   profiles?: { name: string } | null;
 }
+=======
+import { persist } from 'zustand/middleware';
+import { User, WasteTransaction, Reward, MOCK_USERS, MOCK_TRANSACTIONS, MOCK_REWARDS, Quiz, QuizAttempt, MOCK_QUIZZES } from './mockData';
+
+interface AppState {
+  currentUser: User | null;
+  users: User[];
+  transactions: WasteTransaction[];
+  rewards: Reward[];
+  quizzes: Quiz[];
+  quizAttempts: QuizAttempt[];
+  
+  // Actions
+  login: (email: string, password?: string) => boolean;
+  logout: () => void;
+  addTransaction: (transaction: Omit<WasteTransaction, 'id' | 'date' | 'pointsEarned'>) => void;
+  redeemReward: (rewardId: string) => void;
+  completeQuiz: (quizId: string, score: number, totalQuestions: number) => void;
+}
+
+export const useAppStore = create<AppState>()(
+  persist(
+    (set, get) => ({
+      currentUser: null,
+      users: MOCK_USERS,
+      transactions: MOCK_TRANSACTIONS,
+      rewards: MOCK_REWARDS,
+      quizzes: MOCK_QUIZZES,
+      quizAttempts: [],
+>>>>>>> 4413bebe34a81526eb0c85a01edc4ad6dfd221ad
 
 export interface Reward {
   id: string;
@@ -91,6 +122,7 @@ export const useAppStore = create<AppState>((set, get) => ({
             .single();
           profile = newProfile;
         }
+<<<<<<< HEAD
       }
 
       if (profile) {
@@ -103,6 +135,55 @@ export const useAppStore = create<AppState>((set, get) => ({
     } catch (error) {
       console.error('Error fetching user:', error);
       set({ isLoading: false });
+=======
+      },
+
+      completeQuiz: (quizId, score, totalQuestions) => {
+        const { currentUser, quizzes } = get();
+        if (!currentUser) return;
+
+        const quiz = quizzes.find(q => q.id === quizId);
+        if (!quiz) return;
+
+        const pointsEarned = score * quiz.pointsPerQuestion;
+
+        set((state) => {
+          const newAttempt: QuizAttempt = {
+            id: Math.random().toString(36).substr(2, 9),
+            userId: currentUser.id,
+            quizId,
+            score,
+            totalQuestions,
+            pointsEarned,
+            completedAt: new Date().toISOString().split('T')[0],
+          };
+
+          const updatedUsers = state.users.map((u) => {
+            if (u.id === currentUser.id) {
+              return { ...u, points: u.points + pointsEarned };
+            }
+            return u;
+          });
+
+          const updatedCurrentUser = {
+            ...currentUser,
+            points: currentUser.points + pointsEarned
+          };
+
+          return {
+            quizAttempts: [newAttempt, ...state.quizAttempts],
+            users: updatedUsers,
+            currentUser: updatedCurrentUser,
+          };
+        });
+
+        alert(`Selamat! Kamu berhasil menjawab ${score} dari ${totalQuestions} soal dan mendapatkan ${pointsEarned} poin!`);
+      },
+    }),
+    {
+      name: 'trash-to-cash-storage-v2', // Updated version to force refresh of mock data
+      version: 1,
+>>>>>>> 4413bebe34a81526eb0c85a01edc4ad6dfd221ad
     }
   },
 

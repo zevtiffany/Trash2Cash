@@ -36,6 +36,7 @@ export default function DashboardLayout({
 
   return (
     <div className="flex min-h-screen bg-gray-50">
+<<<<<<< HEAD
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       <div className="flex-1 flex flex-col md:ml-64 transition-all duration-300">
@@ -59,6 +60,12 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+=======
+      <Sidebar />
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8">
+        {children}
+      </main>
+>>>>>>> 4413bebe34a81526eb0c85a01edc4ad6dfd221ad
     </div>
   );
 }
