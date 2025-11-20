@@ -1,10 +1,12 @@
 "use client";
 
 import { useAppStore } from "@/lib/store";
+import { useRouter } from "next/navigation";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Coins, Scale, Users, ArrowUpRight, Building2 } from "lucide-react";
+import { Coins, Scale, Users, ArrowUpRight, Building2, Loader2 } from "lucide-react";
+import { useEffect } from "react";
 
-// Inline Card components for simplicity since I can't run shadcn init
+// Inline Card components
 const SimpleCard = ({ title, value, icon: Icon, description }: any) => (
   <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
     <div className="flex items-center justify-between mb-4">
@@ -19,14 +21,33 @@ const SimpleCard = ({ title, value, icon: Icon, description }: any) => (
 );
 
 export default function DashboardPage() {
-  const { currentUser, transactions, users } = useAppStore();
+  const router = useRouter();
+  const { currentUser, transactions, isLoading, fetchUser } = useAppStore((state: any) => state);
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && !currentUser) {
+        router.push("/login");
+    }
+  }, [isLoading, currentUser, router]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+      </div>
+    );
+  }
 
   if (!currentUser) return null;
 
   // Household View
   if (currentUser.role === "household") {
-    const myTransactions = transactions.filter(t => t.userId === currentUser.id);
-    const totalWaste = myTransactions.reduce((acc, curr) => acc + curr.weight, 0);
+    const myTransactions = transactions.filter((t: any) => t.user_id === currentUser.id);
+    const totalWaste = myTransactions.reduce((acc: number, curr: any) => acc + curr.weight, 0);
 
     return (
       <div className="space-y-8">
@@ -44,7 +65,7 @@ export default function DashboardPage() {
           />
           <SimpleCard 
             title="Total Sampah" 
-            value={`${totalWaste} Kg`} 
+            value={`${totalWaste.toFixed(1)} Kg`} 
             icon={Scale} 
             description="Sampah yang sudah disetor" 
           />
@@ -72,12 +93,12 @@ export default function DashboardPage() {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {myTransactions.length > 0 ? (
-                  myTransactions.slice(0, 5).map((t) => (
+                  myTransactions.slice(0, 5).map((t: any) => (
                     <tr key={t.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-3">{t.date}</td>
-                      <td className="px-6 py-3">{t.type}</td>
+                      <td className="px-6 py-3">{new Date(t.created_at).toLocaleDateString('id-ID')}</td>
+                      <td className="px-6 py-3 capitalize">{t.type}</td>
                       <td className="px-6 py-3">{t.weight}</td>
-                      <td className="px-6 py-3 text-emerald-600 font-medium">+{t.pointsEarned}</td>
+                      <td className="px-6 py-3 text-emerald-600 font-medium">+{t.points_earned}</td>
                     </tr>
                   ))
                 ) : (
@@ -98,7 +119,10 @@ export default function DashboardPage() {
   // Waste Bank View
   if (currentUser.role === "waste_bank") {
     const totalTransactions = transactions.length;
-    const totalWasteCollected = transactions.reduce((acc, curr) => acc + curr.weight, 0);
+    const totalWasteCollected = transactions.reduce((acc: number, curr: any) => acc + curr.weight, 0);
+    
+    // Count unique users from transactions as a proxy for active customers
+    const uniqueUsers = new Set(transactions.map((t: any) => t.user_id)).size;
 
     return (
       <div className="space-y-8">
@@ -116,15 +140,15 @@ export default function DashboardPage() {
           />
           <SimpleCard 
             title="Total Sampah Terkumpul" 
-            value={`${totalWasteCollected} Kg`} 
+            value={`${totalWasteCollected.toFixed(1)} Kg`} 
             icon={Scale} 
             description="Akumulasi semua jenis" 
           />
           <SimpleCard 
             title="Nasabah Aktif" 
-            value={users.filter(u => u.role === 'household').length} 
+            value={uniqueUsers} 
             icon={Users} 
-            description="Jumlah warga terdaftar" 
+            description="Warga yang pernah menyetor" 
           />
         </div>
 
@@ -144,18 +168,15 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {transactions.slice(0, 10).map((t) => {
-                  const user = users.find(u => u.id === t.userId);
-                  return (
-                    <tr key={t.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-3 font-mono text-xs">{t.id}</td>
-                      <td className="px-6 py-3">{user?.name || 'Unknown'}</td>
-                      <td className="px-6 py-3">{t.type}</td>
-                      <td className="px-6 py-3">{t.weight} Kg</td>
-                      <td className="px-6 py-3">{t.date}</td>
-                    </tr>
-                  );
-                })}
+                {transactions.slice(0, 10).map((t: any) => (
+                  <tr key={t.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-3 font-mono text-xs">{t.id.slice(0, 8)}...</td>
+                    <td className="px-6 py-3">{t.profiles?.name || 'Unknown'}</td>
+                    <td className="px-6 py-3 capitalize">{t.type}</td>
+                    <td className="px-6 py-3">{t.weight} Kg</td>
+                    <td className="px-6 py-3">{new Date(t.created_at).toLocaleDateString('id-ID')}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -167,7 +188,7 @@ export default function DashboardPage() {
   // Government View
   if (currentUser.role === "government") {
     // Prepare data for chart
-    const data = transactions.reduce((acc: any[], curr) => {
+    const data = transactions.reduce((acc: any[], curr: any) => {
       const existing = acc.find(item => item.name === curr.type);
       if (existing) {
         existing.weight += curr.weight;
@@ -202,16 +223,16 @@ export default function DashboardPage() {
 
           <div className="space-y-6">
              <SimpleCard 
-              title="Total Partisipasi Warga" 
-              value={users.filter(u => u.role === 'household').length} 
-              icon={Users} 
-              description="Rumah tangga aktif" 
+              title="Total Transaksi" 
+              value={transactions.length} 
+              icon={ArrowUpRight} 
+              description="Total transaksi di wilayah" 
             />
              <SimpleCard 
-              title="Total Bank Sampah" 
-              value={users.filter(u => u.role === 'waste_bank').length} 
-              icon={Building2} 
-              description="Unit bank sampah beroperasi" 
+              title="Total Sampah" 
+              value={`${transactions.reduce((acc: number, c: any) => acc + c.weight, 0).toFixed(1)} Kg`} 
+              icon={Scale} 
+              description="Total sampah terkelola" 
             />
           </div>
         </div>

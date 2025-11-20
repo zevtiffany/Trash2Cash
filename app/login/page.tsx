@@ -3,25 +3,75 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppStore } from "@/lib/store";
-import { Recycle, User, Building2, Landmark } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
+import { Recycle, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const login = useAppStore((state) => state.login);
+  const fetchUser = useAppStore((state) => state.fetchUser);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [role, setRole] = useState<"household" | "waste_bank" | "government">("household");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const supabase = createClient();
+
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    
-    const success = login(email, password);
-    if (success) {
-      router.push("/dashboard");
-    } else {
-      setError("Email atau password salah!");
+    setMessage("");
+    setLoading(true);
+
+    try {
+      if (isSignUp) {
+        // Sign Up Logic
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              name: name,
+              role: role,
+            }
+          }
+        });
+
+        if (authError) throw authError;
+
+        if (authData.user) {
+          // Profile creation is now handled by Database Trigger (handle_new_user)
+          // This ensures profile is created even if email verification is pending.
+          
+          setMessage("Registrasi berhasil! Silakan cek email Anda untuk verifikasi.");
+          setIsSignUp(false);
+        }
+      } else {
+        // Login Logic
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (signInError) throw signInError;
+
+        await fetchUser();
+        
+        // Check if user was actually set (profile exists)
+        const currentUser = useAppStore.getState().currentUser;
+        if (currentUser) {
+            router.push("/dashboard");
+        } else {
+            setError("Login berhasil, tetapi profil pengguna tidak ditemukan. Silakan hubungi admin.");
+        }
+      }
+    } catch (err: any) {
+      setError(err.message || "Terjadi kesalahan");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,17 +83,56 @@ export default function LoginPage() {
             <Recycle className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Trash to Cash</h1>
-          <p className="text-emerald-100">Ubah sampahmu menjadi cuan!</p>
+          <p className="text-emerald-100">
+            {isSignUp ? "Buat Akun Baru" : "Ubah sampahmu menjadi cuan!"}
+          </p>
         </div>
 
         <div className="p-8">
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleAuth} className="space-y-6">
             {error && (
               <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center">
                 {error}
               </div>
             )}
+            {message && (
+              <div className="bg-green-50 text-green-600 p-3 rounded-lg text-sm text-center">
+                {message}
+              </div>
+            )}
             
+            {isSignUp && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nama Lengkap
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    placeholder="Nama Anda"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Peran
+                  </label>
+                  <select
+                    value={role}
+                    onChange={(e) => setRole(e.target.value as any)}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="household">Rumah Tangga</option>
+                    <option value="waste_bank">Bank Sampah</option>
+                    <option value="government">Pemerintah</option>
+                  </select>
+                </div>
+              </>
+            )}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email
@@ -74,18 +163,24 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+              disabled={loading}
+              className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              Masuk Sekarang
+              {loading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                isSignUp ? "Daftar" : "Masuk"
+              )}
             </button>
 
             <div className="mt-6 text-center text-sm text-gray-500">
-              <p className="font-medium mb-2">Akun Demo:</p>
-              <div className="space-y-1 text-xs">
-                <p>Rumah Tangga: <span className="font-mono bg-gray-100 px-1 rounded">budi@warga.com</span> / <span className="font-mono bg-gray-100 px-1 rounded">123</span></p>
-                <p>Bank Sampah: <span className="font-mono bg-gray-100 px-1 rounded">admin@maju.com</span> / <span className="font-mono bg-gray-100 px-1 rounded">123</span></p>
-                <p>Pemerintah: <span className="font-mono bg-gray-100 px-1 rounded">admin@dlh.go.id</span> / <span className="font-mono bg-gray-100 px-1 rounded">123</span></p>
-              </div>
+              <button
+                type="button"
+                onClick={() => setIsSignUp(!isSignUp)}
+                className="text-emerald-600 hover:underline font-medium"
+              >
+                {isSignUp ? "Sudah punya akun? Masuk" : "Belum punya akun? Daftar"}
+              </button>
             </div>
           </form>
         </div>

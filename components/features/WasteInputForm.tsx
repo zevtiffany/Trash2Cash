@@ -2,36 +2,58 @@
 
 import { useState } from "react";
 import { useAppStore } from "@/lib/store";
-import { User } from "@/lib/mockData";
-import { Search, Scale, Save } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import { Search, Scale, Save, Loader2 } from "lucide-react";
 
 export default function WasteInputForm() {
-  const { users, currentUser, addTransaction } = useAppStore();
+  const { currentUser, addTransaction } = useAppStore((state: any) => state);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
+  const [selectedUserName, setSelectedUserName] = useState<string>("");
   const [wasteType, setWasteType] = useState<string>("Plastik");
   const [weight, setWeight] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  // Filter household users
-  const householdUsers = users.filter(
-    (u) => u.role === "household" && u.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const supabase = createClient();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id, name, email')
+      .eq('role', 'household')
+      .ilike('name', `%${query}%`)
+      .limit(5);
+    
+    if (data) {
+      setSearchResults(data);
+    }
+    setIsSearching(false);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedUserId || !weight || !currentUser) return;
 
-    addTransaction({
+    await addTransaction({
       userId: selectedUserId,
-      wasteBankId: currentUser.id,
       type: wasteType,
       weight: parseFloat(weight),
     });
 
-    alert("Transaksi berhasil disimpan!");
+    // alert("Transaksi berhasil disimpan!"); // Store already alerts
     setWeight("");
     setSelectedUserId("");
+    setSelectedUserName("");
     setSearchQuery("");
+    setSearchResults([]);
   };
 
   return (
@@ -53,33 +75,44 @@ export default function WasteInputForm() {
               type="text"
               placeholder="Ketik nama nasabah..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
+            {isSearching && (
+                <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 w-4 h-4 animate-spin" />
+            )}
           </div>
           
-          {searchQuery && (
-            <div className="mt-2 border border-gray-200 rounded-lg max-h-40 overflow-y-auto">
-              {householdUsers.map((user) => (
+          {/* Selected User Display */}
+          {selectedUserName && (
+              <div className="mt-2 p-2 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-medium flex justify-between items-center">
+                  <span>Dipilih: {selectedUserName}</span>
+                  <button type="button" onClick={() => { setSelectedUserId(""); setSelectedUserName(""); }} className="text-xs underline">Ubah</button>
+              </div>
+          )}
+
+          {searchQuery && searchResults.length > 0 && !selectedUserId && (
+            <div className="mt-2 border border-gray-200 rounded-lg max-h-40 overflow-y-auto bg-white absolute z-10 w-full shadow-lg">
+              {searchResults.map((user) => (
                 <div
                   key={user.id}
                   onClick={() => {
                     setSelectedUserId(user.id);
-                    setSearchQuery(user.name);
+                    setSelectedUserName(user.name);
+                    setSearchQuery(""); // Clear search query to hide list
+                    setSearchResults([]);
                   }}
-                  className={`p-3 cursor-pointer hover:bg-emerald-50 flex justify-between items-center ${
-                    selectedUserId === user.id ? "bg-emerald-50 text-emerald-700" : ""
-                  }`}
+                  className="p-3 cursor-pointer hover:bg-emerald-50 flex justify-between items-center border-b last:border-0"
                 >
                   <span className="font-medium">{user.name}</span>
                   <span className="text-xs text-gray-500">{user.email}</span>
                 </div>
               ))}
-              {householdUsers.length === 0 && (
-                <div className="p-3 text-gray-500 text-sm text-center">Nasabah tidak ditemukan</div>
-              )}
             </div>
           )}
+           {searchQuery && searchResults.length === 0 && !isSearching && searchQuery.length >= 2 && (
+                <div className="mt-2 text-sm text-gray-500">Tidak ditemukan.</div>
+           )}
         </div>
 
         {/* Waste Type */}
