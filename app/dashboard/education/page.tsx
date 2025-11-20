@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAppStore } from "@/lib/store";
-import { Quiz } from "@/lib/mockData";
+import { useAppStore, Quiz } from "@/lib/store";
 import QuizList from "@/components/features/QuizList";
 import QuizComponent from "@/components/features/QuizComponent";
 import { SkipBack } from "lucide-react";
