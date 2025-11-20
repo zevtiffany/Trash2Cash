@@ -95,17 +95,10 @@ export default function DashboardPage() {
                 {myTransactions.length > 0 ? (
                   myTransactions.slice(0, 5).map((t: any) => (
                     <tr key={t.id} className="hover:bg-gray-50">
-<<<<<<< HEAD
                       <td className="px-6 py-3">{new Date(t.created_at).toLocaleDateString('id-ID')}</td>
                       <td className="px-6 py-3 capitalize">{t.type}</td>
                       <td className="px-6 py-3">{t.weight}</td>
                       <td className="px-6 py-3 text-emerald-600 font-medium">+{t.points_earned}</td>
-=======
-                      <td className="px-3 md:px-6 py-3">{t.date}</td>
-                      <td className="px-3 md:px-6 py-3">{t.type}</td>
-                      <td className="px-3 md:px-6 py-3">{t.weight}</td>
-                      <td className="px-3 md:px-6 py-3 text-emerald-600 font-medium">+{t.pointsEarned}</td>
->>>>>>> 4413bebe34a81526eb0c85a01edc4ad6dfd221ad
                     </tr>
                   ))
                 ) : (
@@ -175,7 +168,6 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-<<<<<<< HEAD
                 {transactions.slice(0, 10).map((t: any) => (
                   <tr key={t.id} className="hover:bg-gray-50">
                     <td className="px-6 py-3 font-mono text-xs">{t.id.slice(0, 8)}...</td>
@@ -185,20 +177,6 @@ export default function DashboardPage() {
                     <td className="px-6 py-3">{new Date(t.created_at).toLocaleDateString('id-ID')}</td>
                   </tr>
                 ))}
-=======
-                {transactions.slice(0, 10).map((t) => {
-                  const user = users.find(u => u.id === t.userId);
-                  return (
-                    <tr key={t.id} className="hover:bg-gray-50">
-                      <td className="px-3 md:px-6 py-3 font-mono text-xs">{t.id.substring(0, 8)}</td>
-                      <td className="px-3 md:px-6 py-3">{user?.name || 'Unknown'}</td>
-                      <td className="px-3 md:px-6 py-3">{t.type}</td>
-                      <td className="px-3 md:px-6 py-3">{t.weight} Kg</td>
-                      <td className="px-3 md:px-6 py-3">{t.date}</td>
-                    </tr>
-                  );
-                })}
->>>>>>> 4413bebe34a81526eb0c85a01edc4ad6dfd221ad
               </tbody>
             </table>
           </div>
