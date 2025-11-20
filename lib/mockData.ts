@@ -33,7 +33,7 @@ export interface Quiz {
   description: string;
   icon: string;
   questions: Question[];
-  pointsPerQuestion: number;
+  points_per_question: number;
 }
 
 export interface Question {
@@ -139,7 +139,7 @@ export const MOCK_QUIZZES: Quiz[] = [
     title: "Dasar Pengelolaan Sampah",
     description: "Pelajari konsep dasar pengelolaan sampah yang berkelanjutan",
     icon: "♻️",
-    pointsPerQuestion: 5,
+    points_per_question: 5,
     questions: [
       {
         id: "q1-1",
@@ -268,7 +268,7 @@ export const MOCK_QUIZZES: Quiz[] = [
     title: "Jenis-Jenis Sampah dan Penanganannya",
     description: "Kenali berbagai jenis sampah dan cara penanganannya yang benar",
     icon: "🗑️",
-    pointsPerQuestion: 5,
+    points_per_question: 5,
     questions: [
       {
         id: "q2-1",
@@ -397,7 +397,7 @@ export const MOCK_QUIZZES: Quiz[] = [
     title: "Ekonomi Sirkular dan Gaya Hidup Berkelanjutan",
     description: "Memahami ekonomi sirkular dan cara hidup yang berkelanjutan untuk masa depan",
     icon: "🌍",
-    pointsPerQuestion: 5,
+    points_per_question: 5,
     questions: [
       {
         id: "q3-1",
