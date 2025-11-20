@@ -1,7 +1,6 @@
 "use client";
 
-import { useAppStore } from "@/lib/store";
-import { Quiz } from "@/lib/mockData";
+import { useAppStore, Quiz } from "@/lib/store";
 import { BookOpen, Trophy, Lock } from "lucide-react";
 
 interface QuizListProps {
@@ -13,13 +12,13 @@ export default function QuizList({ onSelectQuiz }: QuizListProps) {
 
   const getQuizStatus = (quizId: string) => {
     const attempts = quizAttempts.filter(
-      (a) => a.userId === currentUser?.id && a.quizId === quizId
+      (a) => a.user_id === currentUser?.id && a.quiz_id === quizId
     );
     return attempts.length > 0
       ? {
           completed: true,
           bestScore: Math.max(...attempts.map((a) => a.score)),
-          totalQuestions: attempts[0].totalQuestions,
+          totalQuestions: attempts[0].total_questions,
         }
       : { completed: false };
   };
@@ -38,6 +37,7 @@ export default function QuizList({ onSelectQuiz }: QuizListProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {quizzes.map((quiz) => {
           const status = getQuizStatus(quiz.id);
+          const questionCount = quiz.questions?.length || 0;
 
           return (
             <div
@@ -57,12 +57,12 @@ export default function QuizList({ onSelectQuiz }: QuizListProps) {
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center gap-2 text-sm text-gray-700">
                     <BookOpen className="w-4 h-4 text-emerald-600" />
-                    <span>{quiz.questions.length} Soal</span>
+                    <span>{questionCount} Soal</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-700">
                     <Trophy className="w-4 h-4 text-yellow-600" />
                     <span>
-                      {quiz.questions.length * quiz.pointsPerQuestion} Poin Maksimal
+                      {questionCount * quiz.points_per_question} Poin Maksimal
                     </span>
                   </div>
                 </div>

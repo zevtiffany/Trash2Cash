@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAppStore } from "@/lib/store";
-import { Quiz, Question } from "@/lib/mockData";
+import { useAppStore, Quiz } from "@/lib/store";
 import { CheckCircle2, XCircle, SkipBack, Volume2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -14,16 +13,32 @@ interface QuizComponentProps {
 export default function QuizComponent({ quiz, onBack }: QuizComponentProps) {
   const { completeQuiz } = useAppStore();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const questions = quiz.questions || [];
+
+  if (questions.length === 0) {
+    return (
+      <div className="p-8 text-center">
+        <p>Maaf, kuis ini belum memiliki soal.</p>
+        <button
+          onClick={onBack}
+          className="mt-4 text-emerald-600 hover:underline"
+        >
+          Kembali
+        </button>
+      </div>
+    );
+  }
+
   const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(
-    new Array(quiz.questions.length).fill(null)
+    new Array(questions.length).fill(null)
   );
   const [showExplanation, setShowExplanation] = useState(false);
   const [showResult, setShowResult] = useState(false);
 
-  const currentQuestion = quiz.questions[currentQuestionIndex];
+  const currentQuestion = questions[currentQuestionIndex];
   const currentAnswer = selectedAnswers[currentQuestionIndex];
   const isAnswered = currentAnswer !== null;
-  const isCorrect = isAnswered && currentAnswer === currentQuestion.correctAnswer;
+  const isCorrect = isAnswered && currentAnswer === currentQuestion.correct_answer;
 
   const handleSelectAnswer = (optionIndex: number) => {
     if (!showExplanation) {
@@ -35,7 +50,7 @@ export default function QuizComponent({ quiz, onBack }: QuizComponentProps) {
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < quiz.questions.length - 1) {
+    if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setShowExplanation(false);
     } else {
@@ -52,18 +67,18 @@ export default function QuizComponent({ quiz, onBack }: QuizComponentProps) {
 
   const handleFinish = () => {
     const score = selectedAnswers.filter(
-      (answer, index) => answer === quiz.questions[index].correctAnswer
+      (answer, index) => answer === questions[index].correct_answer
     ).length;
-    completeQuiz(quiz.id, score, quiz.questions.length);
+    completeQuiz(quiz.id, score, questions.length);
     onBack();
   };
 
   if (showResult) {
     const score = selectedAnswers.filter(
-      (answer, index) => answer === quiz.questions[index].correctAnswer
+      (answer, index) => answer === questions[index].correct_answer
     ).length;
-    const percentage = Math.round((score / quiz.questions.length) * 100);
-    const pointsEarned = score * quiz.pointsPerQuestion;
+    const percentage = Math.round((score / questions.length) * 100);
+    const pointsEarned = score * quiz.points_per_question;
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 p-4 md:p-8">
@@ -96,7 +111,7 @@ export default function QuizComponent({ quiz, onBack }: QuizComponentProps) {
                 {percentage}%
               </div>
               <p className="text-gray-600 mb-4">
-                {score} dari {quiz.questions.length} jawaban benar
+                {score} dari {questions.length} jawaban benar
               </p>
               <div className="bg-emerald-100 rounded-lg p-4">
                 <p className="text-sm text-gray-700 mb-1">Poin yang Diperoleh</p>
@@ -115,7 +130,7 @@ export default function QuizComponent({ quiz, onBack }: QuizComponentProps) {
             <button
               onClick={() => {
                 setCurrentQuestionIndex(0);
-                setSelectedAnswers(new Array(quiz.questions.length).fill(null));
+                setSelectedAnswers(new Array(questions.length).fill(null));
                 setShowExplanation(false);
                 setShowResult(false);
               }}
@@ -142,7 +157,7 @@ export default function QuizComponent({ quiz, onBack }: QuizComponentProps) {
             Kembali
           </button>
           <div className="text-sm font-semibold text-gray-600">
-            Soal {currentQuestionIndex + 1} dari {quiz.questions.length}
+            Soal {currentQuestionIndex + 1} dari {questions.length}
           </div>
         </div>
 
@@ -152,7 +167,7 @@ export default function QuizComponent({ quiz, onBack }: QuizComponentProps) {
             <div
               className="bg-emerald-600 h-2 rounded-full transition-all duration-300"
               style={{
-                width: `${((currentQuestionIndex + 1) / quiz.questions.length) * 100}%`,
+                width: `${((currentQuestionIndex + 1) / questions.length) * 100}%`,
               }}
             />
           </div>
@@ -162,14 +177,14 @@ export default function QuizComponent({ quiz, onBack }: QuizComponentProps) {
         <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-6">
           {/* Question */}
           <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-6">
-            {currentQuestion.question}
+            {currentQuestion.question_text}
           </h2>
 
           {/* Options */}
           <div className="space-y-3 mb-8">
             {currentQuestion.options.map((option, index) => {
               const isSelected = currentAnswer === index;
-              const isCorrectOption = index === currentQuestion.correctAnswer;
+              const isCorrectOption = index === currentQuestion.correct_answer;
               const showCorrect =
                 showExplanation && isCorrectOption && !isSelected;
               const showWrong = showExplanation && isSelected && !isCorrect;
@@ -270,7 +285,7 @@ export default function QuizComponent({ quiz, onBack }: QuizComponentProps) {
               disabled={!showExplanation}
               className="flex-1 py-3 px-4 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {currentQuestionIndex === quiz.questions.length - 1
+              {currentQuestionIndex === questions.length - 1
                 ? "Lihat Hasil"
                 : "Selanjutnya →"}
             </button>

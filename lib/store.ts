@@ -30,10 +30,41 @@ export interface Reward {
   image_url: string;
 }
 
+export interface Question {
+  id: string;
+  quiz_id: string;
+  question_text: string;
+  options: string[];
+  correct_answer: number;
+  explanation: string;
+  order: number;
+}
+
+export interface Quiz {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  points_per_question: number;
+  questions?: Question[];
+}
+
+export interface QuizAttempt {
+  id: string;
+  user_id: string;
+  quiz_id: string;
+  score: number;
+  total_questions: number;
+  points_earned: number;
+  completed_at: string;
+}
+
 interface AppState {
   currentUser: UserProfile | null;
   transactions: WasteTransaction[];
   rewards: Reward[];
+  quizzes: Quiz[];
+  quizAttempts: QuizAttempt[];
   isLoading: boolean;
   
   // Actions
@@ -42,6 +73,7 @@ interface AppState {
   logout: () => Promise<void>;
   addTransaction: (data: { userId: string; type: string; weight: number }) => Promise<void>;
   redeemReward: (rewardId: string) => Promise<void>;
+  completeQuiz: (quizId: string, score: number, totalQuestions: number) => Promise<void>;
 }
 
 const supabase = createClient();
@@ -50,6 +82,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   currentUser: null,
   transactions: [],
   rewards: [],
+  quizzes: [],
+  quizAttempts: [],
   isLoading: true,
 
   fetchUser: async () => {
@@ -113,6 +147,28 @@ export const useAppStore = create<AppState>((set, get) => ({
     // Fetch Rewards
     const { data: rewards } = await supabase.from('rewards').select('*');
     if (rewards) set({ rewards });
+
+    // Fetch Quizzes with Questions
+    const { data: quizzes } = await supabase
+      .from('quizzes')
+      .select('*, questions(*)');
+    
+    if (quizzes) {
+        // Sort questions by order
+        const sortedQuizzes = quizzes.map((q: any) => ({
+            ...q,
+            questions: q.questions.sort((a: any, b: any) => a.order - b.order)
+        }));
+        set({ quizzes: sortedQuizzes });
+    }
+
+    // Fetch Quiz Attempts
+    const { data: attempts } = await supabase
+        .from('quiz_attempts')
+        .select('*')
+        .eq('user_id', currentUser.id);
+    
+    if (attempts) set({ quizAttempts: attempts });
 
     // Fetch Transactions based on role
     // Join with profiles to get the name of the user who deposited (user_id)
@@ -179,5 +235,33 @@ export const useAppStore = create<AppState>((set, get) => ({
 
     alert('Berhasil menukar hadiah!');
     get().fetchUser(); // Refresh user points
+  },
+
+  completeQuiz: async (quizId, score, totalQuestions) => {
+    const { currentUser, quizzes } = get();
+    if (!currentUser) return;
+
+    const quiz = quizzes.find(q => q.id === quizId);
+    if (!quiz) return;
+
+    const pointsEarned = score * quiz.points_per_question;
+
+    const { error } = await supabase.from('quiz_attempts').insert({
+      user_id: currentUser.id,
+      quiz_id: quizId,
+      score,
+      total_questions: totalQuestions,
+      points_earned: pointsEarned
+    });
+
+    if (error) {
+      console.error('Error saving quiz attempt:', error);
+      alert('Gagal menyimpan hasil kuis');
+      return;
+    }
+
+    // Update local state
+    get().fetchData(); // Refresh attempts and points (since trigger updates points)
+    get().fetchUser(); // Refresh user points specifically
   },
 }));
