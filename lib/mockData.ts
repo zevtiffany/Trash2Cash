@@ -34,6 +34,7 @@ export interface Quiz {
   icon: string;
   questions: Question[];
   points_per_question: number;
+  content?: string;
 }
 
 export interface Question {
@@ -140,6 +141,71 @@ export const MOCK_QUIZZES: Quiz[] = [
     description: "Pelajari konsep dasar pengelolaan sampah yang berkelanjutan",
     icon: "♻️",
     points_per_question: 5,
+    content: `# Dasar Pengelolaan Sampah Berkelanjutan
+
+## Pengenalan Sampah
+Sampah adalah sisa dari kegiatan manusia yang sudah tidak digunakan lagi. Pengelolaan sampah yang baik adalah kunci untuk menjaga lingkungan kita tetap sehat dan berkelanjutan.
+
+## Jenis-Jenis Sampah
+
+### 1. Sampah Organik
+Sampah organik adalah sampah yang berasal dari makhluk hidup dan dapat terurai secara alami. Contohnya:
+- Sisa makanan (nasi, sayuran, buah-buahan)
+- Daun dan ranting
+- Kertas yang terbuat dari serat tumbuhan
+- Kotoran hewan
+
+Sampah organik biasanya membutuhkan waktu 2-6 minggu hingga beberapa bulan untuk terurai sepenuhnya.
+
+### 2. Sampah Anorganik
+Sampah anorganik adalah sampah buatan manusia yang sulit atau tidak dapat terurai secara alami. Contohnya:
+- Plastik (200-300 tahun untuk terurai)
+- Logam dan kaleng (50-200 tahun)
+- Kaca (1 juta tahun atau lebih)
+- Kain sintetis (40-200 tahun)
+
+## Strategi 3R dalam Pengelolaan Sampah
+
+### Reduce (Mengurangi)
+Langkah pertama adalah mengurangi jumlah barang yang kita beli dan gunakan. Dengan mengurangi konsumsi, kita juga mengurangi jumlah sampah yang dihasilkan.
+
+**Tips:**
+- Pikirkan sebelum membeli barang yang tidak penting
+- Gunakan tas belanja yang dapat digunakan kembali
+- Hindari membeli produk dengan kemasan berlebihan
+
+### Reuse (Menggunakan Kembali)
+Sebelum membuang barang, pikirkan apakah masih bisa digunakan untuk keperluan lain.
+
+**Contoh:**
+- Gunakan botol plastik bekas untuk tempat air minum
+- Ubah tas bekas menjadi tas tangan
+- Gunakan sisa kain untuk lap atau pembersih
+
+### Recycle (Mendaur Ulang)
+Mendaur ulang adalah mengubah sampah menjadi produk baru yang bermanfaat.
+
+**Manfaat Daur Ulang:**
+- Mengurangi limbah ke tempat pembuangan akhir (TPA)
+- Menghemat sumber daya alam
+- Mengurangi emisi karbon (hanya perlu 5% energi untuk membuat kaleng baru dari kaleng bekas)
+- Menciptakan lapangan kerja baru
+
+## Dampak Penumpukan Sampah
+
+Jika sampah tidak dikelola dengan baik, akan terjadi berbagai dampak negatif:
+- **Polusi Udara:** Sampah yang membusuk menghasilkan gas metana dan H2S
+- **Pencemaran Air:** Lindi (cairan dari sampah) mencemari air tanah
+- **Penyakit:** Sampah menjadi sarang berbagai penyakit menular
+- **Perubahan Iklim:** Gas metana merupakan gas rumah kaca yang memperkuat pemanasan global
+- **Kerusakan Ekosistem:** Terutama limbah plastik yang berbahaya bagi kehidupan laut
+
+## Bank Sampah
+
+Bank sampah adalah lembaga yang mengumpulkan, memilah, dan mendaur ulang sampah. Peran bank sampah sangat penting dalam mengurangi volume sampah ke TPA dan memberikan nilai ekonomi kepada masyarakat.
+
+## Komitmen Kita
+Setiap orang memiliki peran penting dalam pengelolaan sampah. Mulai dari rumah, dengan memisahkan sampah organik dan anorganik, kita sudah berkontribusi untuk lingkungan yang lebih baik.`,
     questions: [
       {
         id: "q1-1",
@@ -269,6 +335,114 @@ export const MOCK_QUIZZES: Quiz[] = [
     description: "Kenali berbagai jenis sampah dan cara penanganannya yang benar",
     icon: "🗑️",
     points_per_question: 5,
+    content: `# Jenis-Jenis Sampah dan Penanganannya
+
+## Klasifikasi Sampah Berdasarkan Sumbernya
+
+### 1. Sampah Rumah Tangga
+Sampah yang dihasilkan dari kegiatan sehari-hari di rumah. Jenis sampah ini paling banyak dihasilkan oleh masyarakat dan mencakup:
+- Sisa makanan
+- Kemasan plastik dan kertas
+- Kaca, logam
+- Kain bekas
+- Serbuk gergaji (dari kayu)
+
+### 2. Sampah Komersial
+Sampah dari kegiatan perdagangan dan layanan, seperti:
+- Sampah dari toko dan mall
+- Sampah dari restoran dan hotel
+- Kemasan dari pusat distribusi
+- Limbah dari kantor perkantoran
+
+### 3. Sampah Industri
+Sampah dari proses produksi industri yang dapat berupa:
+- Limbah berenergi tinggi
+- Limbah beracun dan berbahaya (B3)
+- Limbah cair dan padat
+- Abu hasil pembakaran
+
+### 4. Sampah Medis/Klinis
+Sampah dari rumah sakit, klinik, dan laboratorium yang sangat berbahaya karena dapat mengandung:
+- Darah dan cairan tubuh
+- Jarum bekas pakai
+- Obat-obatan kadaluarsa
+- Limbah kimia berbahaya
+
+### 5. Sampah Konstruksi dan Demolisi
+Sampah dari kegiatan bangunan, seperti:
+- Sisa beton dan batu bata
+- Kayu bekas
+- Puing-puing bangunan
+- Logam dari struktur bangunan
+
+## Penanganan Sampah Spesifik
+
+### Sampah Plastik
+**Waktu Dekomposisi:** 200-500 tahun
+
+**Cara Penanganan:**
+1. **Reduce:** Kurangi penggunaan plastik sekali pakai
+2. **Reuse:** Gunakan kembali tas plastik untuk keperluan lain
+3. **Recycle:** Pisahkan plastik berdasarkan jenis (PET, LDPE, PP, dll)
+4. **Proper Disposal:** Serahkan ke pusat daur ulang
+
+### Sampah Kaca
+**Waktu Dekomposisi:** Lebih dari 1 juta tahun
+
+**Cara Penanganan:**
+- Kaca dapat didaur ulang berkali-kali tanpa penurunan kualitas
+- Simpan terpisah dari sampah lain
+- Kemasan kaca dapat digunakan kembali sebagai wadah
+- Serahkan ke pusat daur ulang untuk dipoles dan dibuat ulang
+
+### Sampah Logam
+**Waktu Dekomposisi:** 50-200 tahun
+
+**Cara Penanganan:**
+- Logam berharga dapat dijual sebagai besi tua
+- Kaleng aluminium hanya perlu 5% energi untuk didaur ulang dibanding buat baru
+- Pisahkan dari sampah lain
+- Kirim ke pusat pengolahan logam
+
+### Sampah Elektronik (E-Waste)
+**Waktu Dekomposisi:** Tidak terurai + Sangat Berbahaya
+
+**Zat Berbahaya yang Dikandung:**
+- Merkuri (thermometer digital, lampu hemat energi)
+- Timbal (layar CRT, aki)
+- Kadmium (baterai)
+- Arsen
+
+**Cara Penanganan:**
+1. Jangan dibuang ke tempat sampah biasa
+2. Kumpulkan dan pisahkan berdasarkan jenis
+3. Serahkan ke pusat daur ulang e-waste resmi
+4. Atau kembalikan ke toko yang menjual produk baru
+
+### Sampah Minyak Bekas
+**Dampak:** Sangat berbahaya bagi lingkungan dan air tanah
+
+**Cara Penanganan:**
+1. Simpan dalam wadah tertutup yang aman
+2. Jangan dikucurkan ke saluran air atau tanah
+3. Serahkan ke pusat daur ulang atau bengkel yang telah ditunjuk
+4. Minyak bekas dapat didaur ulang untuk bahan bakar atau pelumas baru
+
+### Sampah Medis/Klinis
+**Cara Penanganan:**
+1. Harus ditangani oleh fasilitas khusus dengan standar kesehatan
+2. Disinfeksi dan sterilisasi terlebih dahulu
+3. Dipisahkan berdasarkan jenis (tajam, terkontaminasi, padat)
+4. Dibakar di incinerator khusus atau diolah secara khusus
+
+## Komitmen Pemisahan Sampah di Rumah
+
+Dengan memisahkan sampah sejak dari rumah:
+- **Mempermudah proses daur ulang** di pusat pengolahan
+- **Mengurangi beban TPA** (Tempat Pembuangan Akhir)
+- **Meningkatkan efisiensi pengolahan**
+- **Menciptakan nilai ekonomi** dari limbah
+- **Melindungi petugas** yang menangani sampah`,
     questions: [
       {
         id: "q2-1",
@@ -398,6 +572,139 @@ export const MOCK_QUIZZES: Quiz[] = [
     description: "Memahami ekonomi sirkular dan cara hidup yang berkelanjutan untuk masa depan",
     icon: "🌍",
     points_per_question: 5,
+    content: `# Ekonomi Sirkular dan Gaya Hidup Berkelanjutan
+
+## Apa itu Ekonomi Sirkular?
+
+Ekonomi sirkular adalah model ekonomi yang dirancang untuk menghilangkan konsep pemborosan dengan terus mendaur ulang dan menggunakan kembali produk. Berbeda dengan ekonomi linear yang bersifat "ambil-buat-buang" (take-make-waste), ekonomi sirkular menjaga nilai produk, material, dan sumber daya selama mungkin dalam sistem.
+
+### Prinsip Ekonomi Sirkular:
+1. **Preserve and Enhance:** Mempertahankan dan meningkatkan kapital alami
+2. **Optimize Resource Yields:** Mengoptimalkan hasil dengan mendaur ulang produk
+3. **Rotate Responsibly:** Memutar produk dalam sistem dengan bertanggung jawab
+
+## Dampak Fashion Industry terhadap Lingkungan
+
+### Statistik Mencengangkan:
+- **15-20%** dari limbah global berasal dari fashion industry
+- **92 juta ton** tekstil berakhir di tempat pembuangan sampah setiap tahunnya
+- **Penggunaan air:** 2,700 liter untuk membuat satu kaos katun
+- **Emisi karbon:** Fashion industry menghasilkan 10% emisi karbon global
+
+### Fast Fashion vs. Sustainable Fashion:
+
+**Fast Fashion (Cepat & Buruk):**
+- Produksi masif dengan harga murah
+- Kualitas rendah, cepat rusak
+- Bahan kimia berbahaya dalam produksi
+- Kondisi kerja tidak layak
+- Limbah tekstil yang sangat besar
+
+**Sustainable Fashion (Berkelanjutan):**
+- Produksi berkualitas tinggi dengan daya tahan lama
+- Menggunakan bahan ramah lingkungan (organik, daur ulang)
+- Praktik produksi etis dan fair trade
+- Desain yang timeless dan dapat digunakan bertahun-tahun
+- Mendukung ekonomi sirkular
+
+## Program Zero Waste
+
+Zero Waste adalah filosofi hidup yang bertujuan mengirim sesedikit mungkin limbah ke tempat pembuangan sampah dengan mengubah pola produksi dan konsumsi.
+
+### Tujuan Zero Waste:
+1. **Mencegah** limbah sebelum terbentuk
+2. **Mengurangi** jumlah barang yang dikonsumsikan
+3. **Menggunakan kembali** produk dalam kondisi asli
+4. **Mendaur ulang** material yang tidak bisa digunakan kembali
+5. **Mengembalikan** ke alam dengan cara yang aman
+
+### Langkah Implementasi Zero Waste:
+- Membeli hanya kebutuhan yang benar-benar diperlukan
+- Memilih produk dengan kemasan minimal
+- Membawa wadah sendiri saat berbelanja
+- Mendaur ulang dengan benar
+- Mengedukasi keluarga dan komunitas
+
+## Konsumsi Berkelanjutan
+
+Konsumsi berkelanjutan adalah pembelian dan penggunaan produk dengan cara yang meminimalkan dampak lingkungan dan sosial.
+
+### Cara Berbelanja Berkelanjutan:
+1. **Buy Less, Choose Well:** Beli lebih sedikit, pilih kualitas lebih baik
+2. **Ask Questions:** Tanyakan asal produk dan bagaimana dibuat
+3. **Choose Certified:** Pilih produk dengan sertifikasi lingkungan
+4. **Extend Life:** Rawat produk agar tahan lama
+5. **Second Hand First:** Pertimbangkan produk bekas sebelum membeli baru
+
+### Keuntungan Membeli Second Hand:
+- **Mengurangi limbah:** Memperpanjang umur produk
+- **Hemat uang:** Harga lebih murah
+- **Mengurangi demand produksi:** Kurangi limbah industri
+- **Unik dan berkualitas:** Sering menemukan item berkualitas tinggi
+
+## Pertanian Organik vs. Konvensional
+
+### Pertanian Konvensional (Masalah):
+- Menggunakan pestisida sintetis
+- Mengguna herbisida yang meracuni tanah
+- Mengurangi kesuburan tanah dalam jangka panjang
+- Mencemari air tanah dan air permukaan
+- Membahayakan serangga penyerbuk (lebah)
+
+### Pertanian Organik (Solusi):
+- Tidak menggunakan pestisida sintetis
+- Menggunakan pupuk alami dan kompos
+- Menjaga kesuburan tanah
+- Melindungi ekosistem tanah
+- Produk lebih sehat dan bergizi
+- Mendukung petani lokal
+
+## Carbon Footprint dan Cara Menguranginya
+
+### Carbon Footprint:
+Total emisi gas rumah kaca (CO2, metana, nitrous oxide) yang dihasilkan dari produksi, transportasi, dan konsumsi barang atau layanan.
+
+### Cara Mengurangi Carbon Footprint:
+1. **Transportasi:**
+   - Gunakan transportasi publik
+   - Berkendara motor/mobil bersama (carpool)
+   - Bersepeda atau jalan kaki untuk jarak dekat
+   - Kurangi perjalanan udara
+
+2. **Energi Rumah:**
+   - Gunakan lampu LED
+   - Matikan perangkat yang tidak digunakan
+   - Gunakan energi terbarukan (solar panel)
+   - Isolasi rumah dengan baik
+
+3. **Diet:**
+   - Kurangi konsumsi daging sapi (paling banyak emisi)
+   - Makan sayuran dan buah lokal
+   - Hindari makanan olahan
+
+4. **Belanja:**
+   - Membeli produk lokal
+   - Hindari produk dengan kemasan berlebihan
+   - Pilih produk yang bertahan lama
+   - Dukung bisnis yang berkelanjutan
+
+## Hubungan dengan Sustainable Development Goals (SDGs)
+
+Pengelolaan sampah dan gaya hidup berkelanjutan mendukung beberapa SDGs:
+
+- **SDG 12:** Responsible Consumption and Production - Pola produksi dan konsumsi yang berkelanjutan
+- **SDG 13:** Climate Action - Aksi nyata untuk mengatasi perubahan iklim
+- **SDG 14:** Life Below Water - Menjaga kelestarian kehidupan laut dari plastik dan polusi
+- **SDG 15:** Life on Land - Menjaga ekosistem darat
+- **SDG 9:** Industry, Innovation and Infrastructure - Industri yang ramah lingkungan
+
+## Komitmen untuk Masa Depan
+
+Setiap individu memiliki kekuatan untuk membuat perbedaan. Dengan mengadopsi gaya hidup berkelanjutan:
+- Kita melindungi planet untuk generasi mendatang
+- Kita mendukung ekonomi lokal dan adil
+- Kita menginspirasi orang lain untuk berbuat hal yang sama
+- Kita berkontribusi pada pembangunan berkelanjutan global`,
     questions: [
       {
         id: "q3-1",

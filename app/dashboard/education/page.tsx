@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useAppStore, Quiz } from "@/lib/store";
 import QuizList from "@/components/features/QuizList";
 import QuizComponent from "@/components/features/QuizComponent";
+import EducationContent from "@/components/features/EducationContent";
 import { SkipBack } from "lucide-react";
 
 export default function EducationPage() {
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+  const [showEducation, setShowEducation] = useState(false);
   const { currentUser } = useAppStore();
 
   if (!currentUser) return null;
@@ -34,7 +36,17 @@ export default function EducationPage() {
     );
   }
 
-  if (selectedQuiz) {
+  if (selectedQuiz && showEducation) {
+    return (
+      <EducationContent
+        quiz={selectedQuiz}
+        onStartQuiz={() => setShowEducation(false)}
+        onBack={() => setSelectedQuiz(null)}
+      />
+    );
+  }
+
+  if (selectedQuiz && !showEducation) {
     return (
       <QuizComponent
         quiz={selectedQuiz}
@@ -45,7 +57,10 @@ export default function EducationPage() {
 
   return (
     <div className="space-y-8">
-      <QuizList onSelectQuiz={setSelectedQuiz} />
+      <QuizList onSelectQuiz={(quiz) => {
+        setSelectedQuiz(quiz);
+        setShowEducation(true);
+      }} />
     </div>
   );
 }

@@ -46,6 +46,7 @@ export interface Quiz {
   description: string;
   icon: string;
   points_per_question: number;
+  content?: string;
   questions?: Question[];
 }
 
