@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { createClient } from '@/lib/supabase/client';
+import { MOCK_QUIZZES } from '@/lib/mockData';
 
 export type Role = "household" | "waste_bank" | "government";
 
@@ -149,18 +150,22 @@ export const useAppStore = create<AppState>((set, get) => ({
     const { data: rewards } = await supabase.from('rewards').select('*');
     if (rewards) set({ rewards });
 
-    // Fetch Quizzes with Questions
+    // Fetch Quizzes with Questions - Use MOCK_QUIZZES as fallback
     const { data: quizzes } = await supabase
       .from('quizzes')
       .select('*, questions(*)');
     
-    if (quizzes) {
+    if (quizzes && quizzes.length > 0) {
         // Sort questions by order
         const sortedQuizzes = quizzes.map((q: any) => ({
             ...q,
             questions: q.questions.sort((a: any, b: any) => a.order - b.order)
         }));
         set({ quizzes: sortedQuizzes });
+    } else {
+        // Use MOCK_QUIZZES if no data from database
+        console.log("No quizzes found in database, using mock data");
+        set({ quizzes: MOCK_QUIZZES as any });
     }
 
     // Fetch Quiz Attempts

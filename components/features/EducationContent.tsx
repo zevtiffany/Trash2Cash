@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { Quiz } from "@/lib/store";
-import { BookOpen, Play, SkipBack } from "lucide-react";
-import ReactMarkdown from "react-markdown";
+import { BookOpen, Play, SkipBack, ChevronDown, ChevronUp } from "lucide-react";
 
 interface EducationContentProps {
   quiz: Quiz;
@@ -17,6 +16,31 @@ export default function EducationContent({
   onBack,
 }: EducationContentProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Parse markdown-like content into readable text
+  const formatContent = (content: string) => {
+    return content.split('\n').map((line, idx) => {
+      if (line.startsWith('# ')) {
+        return <h2 key={idx} className="text-2xl font-bold mt-6 mb-3">{line.replace('# ', '')}</h2>;
+      }
+      if (line.startsWith('## ')) {
+        return <h3 key={idx} className="text-xl font-bold mt-5 mb-2">{line.replace('## ', '')}</h3>;
+      }
+      if (line.startsWith('### ')) {
+        return <h4 key={idx} className="text-lg font-semibold mt-4 mb-2">{line.replace('### ', '')}</h4>;
+      }
+      if (line.startsWith('- ')) {
+        return <li key={idx} className="ml-4 text-gray-700">{line.replace('- ', '')}</li>;
+      }
+      if (line.startsWith('**') && line.endsWith('**')) {
+        return <p key={idx} className="font-semibold text-gray-900 my-2">{line.replace(/\*\*/g, '')}</p>;
+      }
+      if (line.trim() === '') {
+        return <div key={idx} className="h-2" />;
+      }
+      return <p key={idx} className="text-gray-700 mb-2 leading-relaxed">{line}</p>;
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-emerald-50 p-4 md:p-8">
@@ -90,9 +114,9 @@ export default function EducationContent({
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-b from-blue-50 to-transparent rounded-xl p-4 md:p-6 border border-blue-200 mb-6">
-                  <div className="prose prose-sm max-w-none text-gray-700 line-clamp-4">
-                    <ReactMarkdown>{quiz.content}</ReactMarkdown>
+                <div className="bg-gradient-to-b from-blue-50 to-transparent rounded-xl p-4 md:p-6 border border-blue-200 mb-6 line-clamp-4 overflow-hidden">
+                  <div className="text-gray-700 space-y-2">
+                    {formatContent(quiz.content).slice(0, 8)}
                   </div>
                   <button
                     onClick={() => setIsExpanded(true)}
@@ -112,8 +136,9 @@ export default function EducationContent({
                   </button>
                   <button
                     onClick={() => setIsExpanded(true)}
-                    className="w-full bg-blue-100 text-blue-700 py-3 px-4 rounded-lg font-semibold hover:bg-blue-200 transition-colors"
+                    className="w-full bg-blue-100 text-blue-700 py-3 px-4 rounded-lg font-semibold hover:bg-blue-200 transition-colors flex items-center justify-center gap-2"
                   >
+                    <ChevronDown className="w-4 h-4" />
                     Baca Materi Lengkap
                   </button>
                 </div>
@@ -125,12 +150,13 @@ export default function EducationContent({
                     onClick={() => setIsExpanded(false)}
                     className="text-blue-600 hover:text-blue-700 font-semibold mb-4 inline-flex items-center gap-2"
                   >
-                    ← Sembunyikan Materi
+                    <ChevronUp className="w-4 h-4" />
+                    Sembunyikan Materi
                   </button>
                 </div>
 
-                <div className="prose prose-sm md:prose-base max-w-none mb-8 bg-gradient-to-br from-blue-50 to-emerald-50 rounded-xl p-6 md:p-8">
-                  <ReactMarkdown>{quiz.content}</ReactMarkdown>
+                <div className="text-gray-700 bg-gradient-to-br from-blue-50 to-emerald-50 rounded-xl p-6 md:p-8 mb-8 space-y-2">
+                  {formatContent(quiz.content)}
                 </div>
 
                 <button
