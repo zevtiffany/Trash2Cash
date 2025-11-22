@@ -5,9 +5,10 @@ import { BookOpen, Trophy, Lock } from "lucide-react";
 
 interface QuizListProps {
   onSelectQuiz: (quiz: Quiz) => void;
+  onReadMaterial?: (quiz: Quiz) => void;
 }
 
-export default function QuizList({ onSelectQuiz }: QuizListProps) {
+export default function QuizList({ onSelectQuiz, onReadMaterial }: QuizListProps) {
   const { quizzes, quizAttempts, currentUser } = useAppStore();
 
   const getQuizStatus = (quizId: string) => {
@@ -78,13 +79,23 @@ export default function QuizList({ onSelectQuiz }: QuizListProps) {
                   </div>
                 ) : null}
 
-                <button
-                  onClick={() => onSelectQuiz(quiz)}
-                  className="w-full bg-emerald-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2"
-                >
-                  {status.completed ? "Ulang Kuis" : "Mulai Kuis"}
-                  {!status.completed && <span>→</span>}
-                </button>
+                <div className="space-y-2">
+                  {onReadMaterial && (
+                    <button
+                      onClick={() => onReadMaterial(quiz)}
+                      className="w-full bg-blue-100 text-blue-700 py-2 px-4 rounded-lg font-semibold hover:bg-blue-200 transition-colors flex items-center justify-center gap-2"
+                    >
+                      📖 Baca Materi
+                    </button>
+                  )}
+                  <button
+                    onClick={() => onSelectQuiz(quiz)}
+                    className="w-full bg-emerald-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    {status.completed ? "Ulang Kuis" : "Mulai Kuis"}
+                    {!status.completed && <span>→</span>}
+                  </button>
+                </div>
               </div>
             </div>
           );

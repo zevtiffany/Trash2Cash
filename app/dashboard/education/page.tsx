@@ -7,9 +7,11 @@ import QuizComponent from "@/components/features/QuizComponent";
 import EducationContent from "@/components/features/EducationContent";
 import { SkipBack } from "lucide-react";
 
+type ViewMode = "list" | "material" | "quiz";
+
 export default function EducationPage() {
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
-  const [showEducation, setShowEducation] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
   const { currentUser } = useAppStore();
 
   if (!currentUser) return null;
@@ -36,31 +38,45 @@ export default function EducationPage() {
     );
   }
 
-  if (selectedQuiz && showEducation) {
+  if (viewMode === "material" && selectedQuiz) {
     return (
       <EducationContent
         quiz={selectedQuiz}
-        onStartQuiz={() => setShowEducation(false)}
-        onBack={() => setSelectedQuiz(null)}
+        onStartQuiz={() => {
+          setViewMode("quiz");
+        }}
+        onBack={() => {
+          setSelectedQuiz(null);
+          setViewMode("list");
+        }}
       />
     );
   }
 
-  if (selectedQuiz && !showEducation) {
+  if (viewMode === "quiz" && selectedQuiz) {
     return (
       <QuizComponent
         quiz={selectedQuiz}
-        onBack={() => setSelectedQuiz(null)}
+        onBack={() => {
+          setSelectedQuiz(null);
+          setViewMode("list");
+        }}
       />
     );
   }
 
   return (
     <div className="space-y-8">
-      <QuizList onSelectQuiz={(quiz) => {
-        setSelectedQuiz(quiz);
-        setShowEducation(true);
-      }} />
+      <QuizList 
+        onSelectQuiz={(quiz) => {
+          setSelectedQuiz(quiz);
+          setViewMode("quiz");
+        }}
+        onReadMaterial={(quiz) => {
+          setSelectedQuiz(quiz);
+          setViewMode("material");
+        }}
+      />
     </div>
   );
 }

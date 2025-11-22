@@ -13,7 +13,9 @@ import {
   Recycle,
   BarChart3,
   Menu,
-  X
+  X,
+  Phone,
+  MapPin
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -61,8 +63,20 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         roles: ["household"],
       },
       {
+        label: "Bank Sampah",
+        href: "/dashboard/locations",
+        icon: MapPin,
+        roles: ["household", "waste_bank"],
+      },
+      {
+        label: "Hubungi Kami",
+        href: "/dashboard/contact",
+        icon: Phone,
+        roles: ["household", "waste_bank", "government"],
+      },
+      {
         label: "Statistik",
-        href: "/dashboard/stats", // Assuming this is a separate page or part of dashboard
+        href: "/dashboard/stats",
         icon: BarChart3,
         roles: ["government"],
       },
