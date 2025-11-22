@@ -111,37 +111,37 @@ export default function WasteBankLocationsPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-          Lokasi Bank Sampah Terdekat
+        <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">
+          Lokasi Bank Sampah
         </h1>
-        <p className="text-gray-600 text-lg">
-          Temukan bank sampah di sekitar Anda untuk menukar sampah dengan poin
+        <p className="text-sm md:text-base text-gray-600">
+          Temukan bank sampah terdekat untuk menukar sampah dengan poin
         </p>
       </div>
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
         {/* Bank List */}
         <div className="lg:col-span-1">
-          <div className="space-y-3 max-h-96 overflow-y-auto">
+          <div className="space-y-2 md:space-y-3 max-h-96 overflow-y-auto">
             {wasteBanks.map((bank, idx) => (
               <button
                 key={bank.id}
                 onClick={() => setSelectedLocation(idx)}
-                className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
+                className={`w-full p-2 md:p-4 rounded-lg border-2 text-left transition-all ${
                   selectedLocation === idx
                     ? "border-emerald-600 bg-emerald-50"
                     : "border-gray-200 bg-white hover:border-emerald-300"
                 }`}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="text-2xl mb-1">{bank.image}</div>
-                    <h3 className="font-semibold text-gray-900 text-sm">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="text-xl md:text-2xl mb-0.5 md:mb-1">{bank.image}</div>
+                    <h3 className="font-semibold text-gray-900 text-xs md:text-sm line-clamp-2">
                       {bank.name}
                     </h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-yellow-500">★</span>
+                    <div className="flex items-center gap-1 md:gap-2 mt-1">
+                      <span className="text-yellow-500 text-xs md:text-sm">★</span>
                       <span className="text-xs font-semibold">
                         {bank.rating}
                       </span>
@@ -151,7 +151,7 @@ export default function WasteBankLocationsPage() {
                     </div>
                   </div>
                   {selectedLocation === idx && (
-                    <div className="text-emerald-600">→</div>
+                    <div className="text-emerald-600 text-lg flex-shrink-0">→</div>
                   )}
                 </div>
               </button>
@@ -161,79 +161,79 @@ export default function WasteBankLocationsPage() {
 
         {/* Details */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-md md:shadow-lg overflow-hidden">
             {/* Header dengan gambar */}
-            <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-8 text-center">
-              <div className="text-8xl mb-4">{currentBank.image}</div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-4 md:p-8 text-center">
+              <div className="text-6xl md:text-8xl mb-2 md:mb-4">{currentBank.image}</div>
+              <h1 className="text-xl md:text-3xl font-bold text-gray-900 mb-2 line-clamp-2">
                 {currentBank.name}
               </h1>
               <div className="flex items-center justify-center gap-2">
-                <span className="text-yellow-500 text-lg">★</span>
-                <span className="font-bold text-lg">{currentBank.rating}</span>
-                <span className="text-gray-600">
-                  ({currentBank.reviews} ulasan)
+                <span className="text-yellow-500 text-base md:text-lg">★</span>
+                <span className="font-bold text-base md:text-lg">{currentBank.rating}</span>
+                <span className="text-xs md:text-base text-gray-600">
+                  ({currentBank.reviews})
                 </span>
               </div>
             </div>
 
             {/* Content */}
-            <div className="p-6 md:p-8 space-y-6">
+            <div className="p-4 md:p-8 space-y-4 md:space-y-6">
               {/* Description */}
-              <p className="text-gray-700 text-center italic">
+              <p className="text-xs md:text-base text-gray-700 text-center italic">
                 {currentBank.description}
               </p>
 
               {/* Info Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <div>
+              <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-4">
+                <div className="bg-blue-50 rounded-lg p-2 md:p-4 border border-blue-200">
+                  <div className="flex items-start gap-2">
+                    <MapPin className="w-4 md:w-5 h-4 md:h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <div className="min-w-0">
                       <p className="text-xs font-semibold text-blue-900 mb-1">
                         ALAMAT
                       </p>
-                      <p className="text-sm text-gray-700">
+                      <p className="text-xs md:text-sm text-gray-700 line-clamp-3">
                         {currentBank.address}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-                  <div className="flex items-start gap-3">
-                    <Phone className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <div>
+                <div className="bg-green-50 rounded-lg p-2 md:p-4 border border-green-200">
+                  <div className="flex items-start gap-2">
+                    <Phone className="w-4 md:w-5 h-4 md:h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <div className="min-w-0">
                       <p className="text-xs font-semibold text-green-900 mb-1">
                         TELEPON
                       </p>
-                      <p className="text-sm text-gray-700 font-mono">
+                      <p className="text-xs md:text-sm text-gray-700 font-mono truncate">
                         {currentBank.phone}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
-                  <div className="flex items-start gap-3">
-                    <Clock className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                    <div>
+                <div className="bg-purple-50 rounded-lg p-2 md:p-4 border border-purple-200">
+                  <div className="flex items-start gap-2">
+                    <Clock className="w-4 md:w-5 h-4 md:h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                    <div className="min-w-0">
                       <p className="text-xs font-semibold text-purple-900 mb-1">
                         JAM BUKA
                       </p>
-                      <p className="text-sm text-gray-700">{currentBank.hours}</p>
+                      <p className="text-xs md:text-sm text-gray-700 line-clamp-2">{currentBank.hours}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
-                  <div className="flex items-start gap-3">
-                    <DollarSign className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                    <div>
+                <div className="bg-yellow-50 rounded-lg p-2 md:p-4 border border-yellow-200">
+                  <div className="flex items-start gap-2">
+                    <DollarSign className="w-4 md:w-5 h-4 md:h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <div className="min-w-0">
                       <p className="text-xs font-semibold text-yellow-900 mb-1">
                         HARGA
                       </p>
-                      <p className="text-sm text-gray-700">
+                      <p className="text-xs md:text-sm text-gray-700 truncate">
                         Rp {currentBank.pricePerKg.toLocaleString()}/kg
                       </p>
                     </div>
@@ -243,14 +243,14 @@ export default function WasteBankLocationsPage() {
 
               {/* Types of Waste */}
               <div>
-                <p className="font-semibold text-gray-900 mb-3">
-                  Jenis Sampah yang Diterima:
+                <p className="text-xs md:text-base font-semibold text-gray-900 mb-2 md:mb-3">
+                  Jenis Sampah:
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1 md:gap-2">
                   {currentBank.types.map((type, idx) => (
                     <span
                       key={idx}
-                      className="bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-semibold"
+                      className="bg-emerald-100 text-emerald-800 px-2 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-semibold"
                     >
                       {type}
                     </span>
@@ -259,18 +259,18 @@ export default function WasteBankLocationsPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-4 border-t border-gray-200">
+              <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-3 pt-3 md:pt-4 border-t border-gray-200">
                 <a
                   href={`https://wa.me/62${currentBank.phone.replace(/[^\d]/g, "").slice(2)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 transition-colors"
+                  className="flex items-center justify-center gap-1 md:gap-2 bg-green-500 text-white py-2 md:py-3 px-2 md:px-4 rounded-lg text-xs md:text-sm font-semibold hover:bg-green-600 transition-colors"
                 >
                   💬 WhatsApp
                 </a>
                 <a
                   href={`mailto:${currentBank.email}`}
-                  className="flex items-center justify-center gap-2 bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  className="flex items-center justify-center gap-1 md:gap-2 bg-blue-600 text-white py-2 md:py-3 px-2 md:px-4 rounded-lg text-xs md:text-sm font-semibold hover:bg-blue-700 transition-colors"
                 >
                   📧 Email
                 </a>
@@ -281,24 +281,24 @@ export default function WasteBankLocationsPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-lg p-4 border border-emerald-200 text-center">
-          <p className="text-3xl font-bold text-emerald-600 mb-1">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+        <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-lg p-3 md:p-4 border border-emerald-200 text-center">
+          <p className="text-2xl md:text-3xl font-bold text-emerald-600 mb-1">
             {wasteBanks.length}
           </p>
-          <p className="text-sm text-gray-700">Bank Sampah Terdaftar</p>
+          <p className="text-xs md:text-sm text-gray-700">Bank Sampah</p>
         </div>
-        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border border-blue-200 text-center">
-          <p className="text-3xl font-bold text-blue-600 mb-1">24/7</p>
-          <p className="text-sm text-gray-700">Layanan Tersedia</p>
+        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-3 md:p-4 border border-blue-200 text-center">
+          <p className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">24/7</p>
+          <p className="text-xs md:text-sm text-gray-700">Layanan</p>
         </div>
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-200 text-center">
-          <p className="text-3xl font-bold text-purple-600 mb-1">4.6⭐</p>
-          <p className="text-sm text-gray-700">Rating Rata-rata</p>
+        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-3 md:p-4 border border-purple-200 text-center">
+          <p className="text-2xl md:text-3xl font-bold text-purple-600 mb-1">4.6⭐</p>
+          <p className="text-xs md:text-sm text-gray-700">Rating</p>
         </div>
-        <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-4 border border-yellow-200 text-center">
-          <p className="text-3xl font-bold text-yellow-600 mb-1">Gratis</p>
-          <p className="text-sm text-gray-700">Registrasi Member</p>
+        <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-3 md:p-4 border border-yellow-200 text-center">
+          <p className="text-2xl md:text-3xl font-bold text-yellow-600 mb-1">Gratis</p>
+          <p className="text-xs md:text-sm text-gray-700">Member</p>
         </div>
       </div>
     </div>

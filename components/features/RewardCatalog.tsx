@@ -27,7 +27,7 @@ export default function RewardCatalog() {
           <p className="text-gray-500">Belum ada hadiah tersedia saat ini.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           {rewards.map((reward: any) => {
             const canAfford = currentUser.points >= reward.points_cost;
             
