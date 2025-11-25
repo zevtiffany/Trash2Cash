@@ -106,7 +106,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <div className="bg-emerald-600 p-2 rounded-lg">
             <Recycle className="w-6 h-6 text-white" />
           </div>
-          <span className="font-bold text-xl text-emerald-900">Trash2Cash</span>
+          <span className="font-bold text-xl text-emerald-900">Kel 8 Trash2Cash</span>
         </div>
 
         <div className="p-4">
